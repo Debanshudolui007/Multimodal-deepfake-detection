@@ -1,0 +1,34 @@
+# ============================================================
+# frequency.yaml — Frequency tensor generation parameters
+# ============================================================
+
+# ── Wavelet Decomposition ─────────────────────────────────────
+wavelet:
+  family: "db4"       # Daubechies 4 wavelet
+  level: 1            # Decomposition level
+  mode: "periodization"
+
+# ── FFT ──────────────────────────────────────────────────────
+fft:
+  log_magnitude: true
+  shift: true         # Apply fftshift for centered spectrum
+  normalize: true     # Normalize to [0, 1]
+
+# ── Channel Construction ──────────────────────────────────────
+channels:
+  channel_1: "fft"           # 2D FFT log magnitude
+  channel_2: "wavelet_ll"    # Low-freq approximation (LL sub-band)
+  channel_3: "wavelet_energy" # sqrt(LH² + HL² + HH²) — Energy Map
+
+# ── Output ───────────────────────────────────────────────────
+output:
+  resize: 224          # Resize all channels to this (bilinear)
+  dtype: "float32"
+  normalize: true
+
+# ── Debug Image Saving ────────────────────────────────────────
+debug:
+  save_debug_images: true
+  debug_dir: "deepfake_detector/processed/frequency/debug"
+  # Save one debug image every N faces (reduce disk usage)
+  save_every_n: 50

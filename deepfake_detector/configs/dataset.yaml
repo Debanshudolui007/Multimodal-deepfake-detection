@@ -1,0 +1,79 @@
+# ============================================================
+# dataset.yaml — Dataset paths, sampling, and split settings
+# ============================================================
+
+# ── Raw Dataset Roots (Never Modified) ──────────────────────
+raw:
+  celebdf:    "DATASET/celeb DF"
+  ff_plus:    "DATASET/FACEF++/FaceForensics++_C23"
+  fakeavceleb: "DATASET/FAKEAVCELEB/FakeAVCeleb_v1.2/FakeAVCeleb_v1.2"
+
+# ── CelebDF label mapping ────────────────────────────────────
+celebdf:
+  real_dirs:
+    - "Celeb-real"
+    - "YouTube-real"
+  fake_dirs:
+    - "Celeb-synthesis"
+
+# ── FaceForensics++ label mapping ────────────────────────────
+ff_plus:
+  real_dirs:
+    - "original"
+  fake_dirs:
+    - "Deepfakes"
+    - "Face2Face"
+    - "FaceSwap"
+    - "NeuralTextures"
+    - "FaceShifter"
+    - "DeepFakeDetection"
+
+# ── FakeAVCeleb label mapping ────────────────────────────────
+fakeavceleb:
+  real_dirs:
+    - "RealVideo-RealAudio"
+  fake_dirs:
+    - "FakeVideo-FakeAudio"
+    - "FakeVideo-RealAudio"
+    - "RealVideo-FakeAudio"
+
+# ── Preprocessed Output Paths ────────────────────────────────
+processed:
+  root:      "deepfake_detector/processed"
+  frames:    "deepfake_detector/processed/frames"
+  faces:     "deepfake_detector/processed/faces"
+  frequency: "deepfake_detector/processed/frequency"
+  audio:     "deepfake_detector/processed/audio"
+  splits:    "deepfake_detector/processed/splits"
+
+# ── Results & Logs ───────────────────────────────────────────
+results_dir:     "deepfake_detector/results"
+logs_dir:        "deepfake_detector/logs"
+experiments_dir: "deepfake_detector/experiments"
+checkpoints_dir: "deepfake_detector/checkpoints"
+research_dir:    "deepfake_detector/research"
+
+# ── Sampling (set to 1.0 for full dataset on GPU) ────────────
+sample_fraction: 1.0        # Use the full verified dataset for training
+max_videos_per_class: null  # null = no hard cap (use sample_fraction)
+random_seed: 42
+
+# ── Dataset Split Ratios (by video, not by frame) ────────────
+split:
+  train: 0.70
+  val:   0.15
+  test:  0.15
+
+# ── Video File Extensions ─────────────────────────────────────
+video_extensions:
+  - ".mp4"
+  - ".avi"
+  - ".mov"
+  - ".mkv"
+
+# ── Dataset Versioning Manifest Fields ───────────────────────
+manifest:
+  resolution: 224
+  face_detector: "RetinaFace"
+  wavelet: "db4"
+  wavelet_level: 1

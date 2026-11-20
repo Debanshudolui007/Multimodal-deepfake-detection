@@ -1,0 +1,56 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Datasets & Processed data (very large, >34 GB)
+DATASET/
+deepfake_detector/processed/
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Model checkpoints & heavy weights (>100MB limits on GitHub)
+*.pth
+*.pt
+*.bin
+*.onnx
+*.torchscript
+checkpoints/
+deepfake_detector/checkpoints/
+deepfake_detector/experiments/*/checkpoints/
+
+# Logs & TensorBoard events
+*.log
+*.tfevents*
+deepfake_detector/logs/
+deepfake_detector/experiments/*/logs/tensorboard/
+deepfake_detector/experiments/*/logs/live_batch.json
+deepfake_detector/experiments/*/logs/live_eval.json
+
+# Python & compilation
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Databases
+*.sqlite3
+*.db
+
+# Operating System & IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

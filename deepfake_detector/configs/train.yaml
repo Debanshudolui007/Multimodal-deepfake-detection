@@ -1,0 +1,118 @@
+# ============================================================
+# train.yaml — Training hyper-parameters for all branches
+# ============================================================
+
+# ── Global ───────────────────────────────────────────────────
+random_seed: 42
+device: "auto"           # "auto" | "cuda" | "cpu"
+
+# ── Shared training defaults (read by BaseTrainer / SpatialTrainer) ──────────
+epochs: 30
+batch_size: 16
+dataloader_workers: 0    # 0 = safe on Windows (no multiprocessing fork issues)
+pin_memory: false        # true only when CUDA is available
+amp: false               # true enables AMP on GPU; no-op on CPU
+grad_clip: 1.0
+
+optimizer:
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+
+scheduler:
+  factor: 0.5
+  patience: 3
+
+early_stopping:
+  patience: 7
+
+# ── Spatial Branch ───────────────────────────────────────────
+spatial:
+  epochs: 30
+  batch_size: 16
+  optimizer: "adamw"
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  scheduler: "cosine"
+  scheduler_t_max: 30
+  grad_clip: 1.0
+  amp: true              # Enabled on GPU, gracefully falls back on CPU
+  # Checkpointing
+  checkpoint_every_epoch: true
+  checkpoint_best_accuracy: true
+  checkpoint_best_f1: true
+  checkpoint_best_roc: true
+  # Export
+  export: ["pth", "torchscript", "onnx"]
+  export_input_shape: [1, 3, 224, 224]
+
+# ── Frequency Branch ─────────────────────────────────────────
+frequency:
+  epochs: 30
+  batch_size: 16
+  optimizer: "adamw"
+  learning_rate: 5.0e-5
+  weight_decay: 1.0e-4
+  scheduler: "cosine"
+  scheduler_t_max: 30
+  grad_clip: 1.0
+  amp: true
+  checkpoint_every_epoch: true
+  checkpoint_best_accuracy: true
+  checkpoint_best_f1: true
+  checkpoint_best_roc: true
+  export: ["pth", "torchscript", "onnx"]
+  export_input_shape: [1, 3, 224, 224]
+
+# ── Audio Branch ─────────────────────────────────────────────
+audio:
+  epochs: 30
+  batch_size: 16
+  optimizer: "adamw"
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  scheduler: "cosine"
+  scheduler_t_max: 30
+  grad_clip: 1.0
+  amp: true
+  checkpoint_every_epoch: true
+  checkpoint_best_accuracy: true
+  checkpoint_best_f1: true
+  checkpoint_best_roc: true
+  export: ["pth"]
+  export_input_shape: [1, 168, 128]   # (MFCC+Mel features) × time-steps
+
+# ── Fusion ───────────────────────────────────────────────────
+fusion:
+  # Stage 1: Freeze backbones, train head only
+  freeze_epochs: 10
+  freeze_lr: 1.0e-3
+  # Stage 2: Unfreeze entire network, fine-tune
+  finetune_epochs: 20
+  finetune_lr: 1.0e-5
+  batch_size: 8
+  optimizer: "adamw"
+  weight_decay: 1.0e-4
+  scheduler: "cosine"
+  grad_clip: 1.0
+  amp: true
+  checkpoint_every_epoch: true
+  checkpoint_best_accuracy: true
+  checkpoint_best_f1: true
+  checkpoint_best_roc: true
+  export: ["pth", "torchscript", "onnx"]
+
+# ── Augmentation (Spatial) ───────────────────────────────────
+augmentation:
+  horizontal_flip: 0.5
+  random_crop: true
+  crop_scale: [0.85, 1.0]
+  jpeg_compression_quality: [60, 100]
+  blur_limit: 3
+  gaussian_noise_std: 0.02
+  color_jitter:
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.1
+  normalize_mean: [0.485, 0.456, 0.406]
+  normalize_std:  [0.229, 0.224, 0.225]

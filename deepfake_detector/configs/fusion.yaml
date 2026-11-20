@@ -1,0 +1,58 @@
+# ============================================================
+# fusion.yaml — Fusion network and ablation study parameters
+# ============================================================
+
+# ── Attention Fusion Architecture ────────────────────────────
+attention:
+  projection_dim: 512      # Common projection space for all modalities
+  num_heads: 8
+  attention_dropout: 0.1
+  num_layers: 1            # Number of self-attention layers
+
+# ── MLP Classification Head ───────────────────────────────────
+classifier:
+  hidden_dim: 512
+  dropout: 0.4
+  num_classes: 2
+
+# ── Dropout ──────────────────────────────────────────────────
+modality_dropout_prob: 0.1    # Randomly mask a full modality during training
+feature_dropout_prob: 0.1     # Feature-level dropout within each projection
+
+# ── Training Schedule ─────────────────────────────────────────
+training:
+  # Stage 1: Frozen backbones — train only fusion head
+  freeze_epochs: 10
+  freeze_lr: 1.0e-3
+  # Stage 2: Unfreeze all — end-to-end fine-tuning
+  finetune_epochs: 20
+  finetune_lr: 1.0e-5
+  weight_decay: 1.0e-4
+  scheduler: "cosine"
+
+# ── Ablation Study — Modality Combinations ────────────────────
+# Evaluated automatically during --evaluate --ablation
+ablation:
+  combinations:
+    - ["spatial"]
+    - ["frequency"]
+    - ["audio"]
+    - ["spatial", "frequency"]
+    - ["spatial", "audio"]
+    - ["frequency", "audio"]
+    - ["spatial", "frequency", "audio"]
+
+# ── Cross-Dataset Generalization Experiments ──────────────────
+cross_dataset:
+  experiments:
+    - train: ["celebdf"]
+      test:  ["ff_plus"]
+    - train: ["ff_plus"]
+      test:  ["celebdf"]
+    - train: ["celebdf", "ff_plus"]
+      test:  ["fakeavceleb"]
+
+# ── Confidence Output ─────────────────────────────────────────
+confidence:
+  return_per_modality: true   # Return spatial/frequency/audio confidence separately
+  temperature: 1.0            # Temperature scaling for calibration (1.0 = no scaling)

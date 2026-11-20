@@ -1,0 +1,63 @@
+# ============================================================
+# model.yaml — Model architecture specifications
+# ============================================================
+
+# ── Spatial Branch Backbone ───────────────────────────────────
+# Supported values (loaded via timm or torchvision):
+#   resnext50_32x4d    → 2048-D output  (default)
+#   efficientnet_v2_s  → 1280-D output
+#   convnext_tiny      → 768-D output
+#   efficientnet_b4    → 1792-D output
+spatial:
+  backbone: "resnext50_32x4d"
+  pretrained: true
+  output_dim: 2048          # Must match selected backbone
+  image_size: 224
+  dropout: 0.5
+  num_classes: 1            # Binary BCE: 1 output logit (real=0, fake=1)
+
+# ── Frequency Branch ─────────────────────────────────────────
+frequency:
+  backbone: "swin_tiny_patch4_window7_224"   # timm model name
+  pretrained: true
+  output_dim: 768           # Swin-T head feature size
+  image_size: 224
+  in_channels: 3            # FFT + LL + Energy Map
+  dropout: 0.3
+  num_classes: 1
+
+# ── Audio Branch ─────────────────────────────────────────────
+audio:
+  # 1D CNN configuration
+  cnn_channels: [64, 128, 256]
+  cnn_kernel_size: 3
+  cnn_pool_size: 2
+  # BiLSTM configuration
+  lstm_hidden: 256
+  lstm_layers: 2
+  lstm_dropout: 0.3
+  bidirectional: true
+  # Output
+  output_dim: 512           # 2 × lstm_hidden (bidirectional)
+  dropout: 0.3
+  num_classes: 1
+
+# ── Fusion Network ────────────────────────────────────────────
+fusion:
+  # Input dims must match each branch's output_dim
+  spatial_dim: 2048
+  frequency_dim: 768
+  audio_dim: 512
+  # Attention projection common dimension
+  projection_dim: 512
+  # Multi-head attention
+  num_heads: 8
+  attention_dropout: 0.1
+  # MLP head after attention pooling
+  hidden_dim: 512
+  dropout: 0.4
+  num_classes: 1
+  # Modality dropout during training (randomly zero a modality's features)
+  modality_dropout_prob: 0.1
+  # Feature dropout within each projection
+  feature_dropout_prob: 0.1

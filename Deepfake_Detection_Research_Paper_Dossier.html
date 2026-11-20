@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Research Paper Dossier: Tri-Modal Cross-Attention Fusion for Robust Deepfake Detection</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 16mm 18mm 16mm;
+    @bottom-right {
+      content: counter(page);
+      font-size: 9pt;
+      color: #666;
+    }
+  }
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 10.5pt;
+    line-height: 1.45;
+    color: #111;
+    margin: 0;
+    padding: 0;
+  }
+  h1 {
+    font-size: 17pt;
+    text-align: center;
+    margin-bottom: 4px;
+    font-weight: bold;
+    color: #0b2545;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 10pt;
+    font-style: italic;
+    color: #444;
+    margin-bottom: 18px;
+  }
+  .metadata-box {
+    background-color: #f4f6f9;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    font-size: 9pt;
+  }
+  .metadata-box p {
+    margin: 3px 0;
+  }
+  h2 {
+    font-size: 12.5pt;
+    color: #0b2545;
+    border-bottom: 1.5px solid #0b2545;
+    padding-bottom: 3px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  h3 {
+    font-size: 11pt;
+    color: #134074;
+    margin-top: 12px;
+    margin-bottom: 5px;
+  }
+  p {
+    margin: 6px 0;
+    text-align: justify;
+  }
+  ul, ol {
+    margin: 6px 0 10px 20px;
+    padding: 0;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 16px 0;
+    font-size: 9pt;
+  }
+  table, th, td {
+    border: 1px solid #ccc;
+  }
+  th {
+    background-color: #0b2545;
+    color: #ffffff;
+    padding: 6px 8px;
+    font-weight: bold;
+    text-align: center;
+  }
+  td {
+    padding: 5px 8px;
+    text-align: left;
+  }
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+  .text-center {
+    text-align: center;
+  }
+  .highlight {
+    font-weight: bold;
+    color: #0b2545;
+  }
+  .equation {
+    background-color: #f8fafc;
+    border-left: 3px solid #134074;
+    padding: 6px 12px;
+    margin: 8px 0;
+    font-family: 'Cambria Math', 'Latin Modern Math', serif;
+    font-size: 10pt;
+    text-align: center;
+  }
+  .diagram-box {
+    background: #fdfdfd;
+    border: 1px dashed #777;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 8.5pt;
+    line-height: 1.25;
+    margin: 12px 0;
+    white-space: pre;
+    overflow-x: hidden;
+  }
+  .prompt-box {
+    background: #eef2f6;
+    border: 1px solid #90caf9;
+    padding: 12px;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 8.5pt;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 10px 0;
+  }
+  .page-break {
+    page-break-before: always;
+  }
+</style>
+</head>
+<body>
+
+<h1>Tri-Modal Cross-Attention Fusion: Harmonizing Spatial, Spectral, and Acoustic Representations for Robust Deepfake Detection</h1>
+<div class="subtitle">Complete Technical Project Dossier & Final Paper Specification</div>
+
+<div class="metadata-box">
+  <p><strong>Primary Recommended Title:</strong> Tri-Modal Cross-Attention Fusion: Harmonizing Spatial, Spectral, and Acoustic Representations for Robust Deepfake Detection</p>
+  <p><strong>Alternative Titles:</strong> Beyond Visual Artifacts: A Spatial-Frequency-Audio Multimodal Framework with Attention-Guided Forgery Attribution</p>
+  <p><strong>Keywords:</strong> Deepfake Detection, Multimodal Fusion, Cross-Attention Transformer, Discrete Wavelet Transform (DWT), Fast Fourier Transform (FFT), Swin Transformer, BiLSTM, Platt Scaling, Explainable AI (XAI)</p>
+  <p><strong>Target Publication Venues:</strong> IEEE TIFS, IEEE CVPR/ICCV Workshops on Media Forensics, ACM Multimedia, IEEE ICASSP, Elsevier Computers & Security</p>
+</div>
+
+<h2>1. Abstract</h2>
+<p>
+Recent advances in Generative Adversarial Networks (GANs) and latent diffusion models have made deepfake video and audio synthesis increasingly photorealistic. Traditional unimodal detection pipelines rely primarily on visual artifacts in the spatial domain, which degrade under lossy social media compression, resizing, and adversarial perturbations. In this work, we present an end-to-end tri-modal deepfake detection architecture that jointly models <strong>Spatial (RGB)</strong>, <strong>Frequency (FFT + DWT)</strong>, and <strong>Acoustic (MFCC + Mel-Spectrogram)</strong> representations.
+</p>
+<p>
+Our pipeline extracts facial keyframes via RetinaFace and constructs a composite 3-channel frequency representation combining 2D FFT log-magnitude, Daubechies-4 Wavelet (DWT) Low-Low approximation, and high-frequency Wavelet Energy maps (&radic;(LH&sup2; + HL&sup2; + HH&sup2;)). For temporal audio, we extract concatenated 40-dimensional MFCCs and 128-dimensional Mel spectrograms across a fixed temporal window. The system leverages specialized backbones: a <strong>ResNeXt-50 (32&times;4d)</strong> for spatial feature extraction (2048-D), a <strong>Swin Transformer Tiny</strong> with shifted-window self-attention for spectral lattice artifact discovery (768-D), and a <strong>1D CNN + BiLSTM with temporal attention pooling</strong> for phonemic and vocal anomaly modeling (512-D). These representations are projected into a shared 512-D latent space and fused via a <strong>Multi-Head Transformer Cross-Attention module</strong> with dynamic attention pooling and modality dropout (10%).
+</p>
+<p>
+Trained and validated across <strong>35,089 videos (34.7 GB)</strong> from three standard benchmarks (<strong>Celeb-DF v2, FaceForensics++ C23, and FakeAVCeleb v1.2</strong>), our individual branches achieve validation ROC-AUCs of <strong>96.76% (Spatial)</strong>, <strong>97.03% (Frequency)</strong>, and <strong>100.0% (Audio)</strong>, with the unified cross-attention fusion achieving <strong>95.68% ROC-AUC, 94.19% accuracy, and 96.69% F1-score</strong>. Post-hoc Platt scaling is incorporated for well-calibrated posterior probabilities, while Grad-CAM and modality-level attention weight breakdowns provide human-interpretable evidence attribution.
+</p>
+
+<h2>2. Benchmark Datasets & Data Integrity Protocol</h2>
+<p>
+The system was trained, validated, and evaluated on a combined corpus of <strong>35,089 videos</strong> totaling <strong>34.69 GB</strong>. The split protocol follows a strict <strong>70% Train, 15% Validation, 15% Test</strong> distribution partitioned strictly by <strong>Video ID and subject identity</strong> to eliminate cross-split frame contamination.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Dataset</th>
+      <th>Total Videos</th>
+      <th>Real Count</th>
+      <th>Fake Count</th>
+      <th>Manipulation / Forgery Types</th>
+      <th>Video Codec & Resolution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Celeb-DF (v2)</strong></td>
+      <td class="text-center">6,529</td>
+      <td class="text-center">890</td>
+      <td class="text-center">5,639</td>
+      <td>High-quality Deepfake face replacement</td>
+      <td>FMP4, ~30 fps, variable res</td>
+    </tr>
+    <tr>
+      <td><strong>FaceForensics++ (C23)</strong></td>
+      <td class="text-center">7,000</td>
+      <td class="text-center">1,000</td>
+      <td class="text-center">6,000</td>
+      <td>Deepfakes, Face2Face, FaceSwap, NeuralTextures, FaceShifter</td>
+      <td>H.264 (C23 compressed), ~27 fps</td>
+    </tr>
+    <tr>
+      <td><strong>FakeAVCeleb (v1.2)</strong></td>
+      <td class="text-center">21,560</td>
+      <td class="text-center">500</td>
+      <td class="text-center">21,060</td>
+      <td>FakeVideo-FakeAudio, FakeVideo-RealAudio, RealVideo-FakeAudio (Wav2Lip)</td>
+      <td>H.264 & FMP4, 224&times;224, 25 fps</td>
+    </tr>
+    <tr style="font-weight: bold; background-color: #eaeff5;">
+      <td>Total Corpus</td>
+      <td class="text-center">35,089</td>
+      <td class="text-center">2,390</td>
+      <td class="text-center">32,699</td>
+      <td>Tri-modal visual, spectral & acoustic manipulations</td>
+      <td>34.69 GB Total Storage</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<h2>3. Mathematical Formulations & Feature Extraction</h2>
+
+<h3>3.1 Composite Frequency Tensor (3 &times; 224 &times; 224)</h3>
+<p>For a normalized facial crop converted to grayscale <i>I<sub>gray</sub> &in; [0, 1]</i>:</p>
+<div class="equation">
+  Channel 0 (FFT Magnitude): &nbsp; <i>F(u, v) = log(1 + |fftshift(&fnof;(I<sub>gray</sub>))|)</i> &nbsp; [Normalized to 0..1]
+</div>
+<div class="equation">
+  Channel 1 (DWT LL Approximation): &nbsp; <i>LL = DWT<sub>db4</sub>(I<sub>gray</sub>)</i>
+</div>
+<div class="equation">
+  Channel 2 (DWT Energy Map): &nbsp; <i>E<sub>dwt</sub> = &radic;(LH&sup2; + HL&sup2; + HH&sup2;)</i>
+</div>
+<p>The 3-channel tensor is normalized via dataset statistics: &mu; = (109.83, 109.83, 109.83), &sigma; = (41.05, 41.05, 41.05).</p>
+
+<h3>3.2 Acoustic Feature Representation (168 &times; 300)</h3>
+<p>
+Audio is downmixed to 16 kHz mono PCM. Features comprise 40-dimensional MFCCs concatenated with a 128-dimensional log Mel-frequency spectrogram, padded or trimmed to a 300-frame temporal window (~3.0 seconds).
+</p>
+
+<h3>3.3 Cross-Attention Multi-Head Transformer Fusion</h3>
+<div class="equation">
+  <i>z<sub>sp</sub> = GELU(LN(W<sub>sp</sub> h<sub>sp</sub>)), &nbsp; z<sub>freq</sub> = GELU(LN(W<sub>freq</sub> h<sub>freq</sub>)), &nbsp; z<sub>au</sub> = GELU(LN(W<sub>au</sub> h<sub>au</sub>)) &in; &#8477;<sup>512</sup></i>
+</div>
+<div class="equation">
+  <i>Z = [z<sub>sp</sub>, z<sub>freq</sub>, z<sub>au</sub>] &in; &#8477;<sup>B &times; 3 &times; 512</sup></i>
+</div>
+<div class="equation">
+  <i>Z<sub>fused</sub> = TransformerEncoder(Z, mask=M<sub>padding</sub>)</i>
+</div>
+<div class="equation">
+  <i>&alpha; = Softmax(W<sub>p</sub> Z<sub>fused</sub>) = [&alpha;<sub>sp</sub>, &alpha;<sub>freq</sub>, &alpha;<sub>au</sub>]<sup>T</sup>, &nbsp;&nbsp; c<sub>fused</sub> = &sum;<sub>m</sub> &alpha;<sub>m</sub> Z<sub>fused</sub><sup>(m)</sup></i>
+</div>
+
+<h3>3.4 Auxiliary Multi-Task Loss</h3>
+<div class="equation">
+  <i>&#8466;<sub>total</sub> = &#8466;<sub>BCE</sub>(y&#770;<sub>fused</sub>, y) + 0.3 &times; &sum;<sub>m &in; {sp, freq, au}</sub> &#120793;(m valid) &middot; &#8466;<sub>BCE</sub>(y&#770;<sub>m</sub>, y)</i>
+</div>
+
+<h3>3.5 Post-Hoc Platt Probability Calibration</h3>
+<div class="equation">
+  <i>P(Fake | z) = 1 / (1 + exp(-(a &middot; z + b)))</i>
+</div>
+
+<h2>4. System Architecture Flow</h2>
+<div class="diagram-box">
+[INPUT VIDEO]
+   │
+   ├── [Spatial Frame (224x224)] ── ResNeXt-50 (32x4d) ──> [Spatial Feat: 2048-D] ──> Linear+LN+GELU (512-D) ──┐
+   ├── [Frequency Tensor (3x224)] ── Swin-T (Shifted Win) ─> [Spectral Feat: 768-D] ──> Linear+LN+GELU (512-D) ──┼──> [Transformer Encoder]
+   └── [Acoustic Stream (168x300)] ── 1D CNN + BiLSTM ────> [Acoustic Feat: 512-D] ─> Linear+LN+GELU (512-D) ──┘        (8 Attention Heads)
+                                                                                                                           │
+                                                                                                                   [Attention Pooling]
+                                                                                                             Weights: [α_sp, α_freq, α_au]
+                                                                                                                           │
+                                                                                                                 [Fused Embedding: 512-D]
+                                                                                                                           │
+                                                                                                                   [MLP Head: 512->1]
+                                                                                                                           │
+                                                                                                                 [Platt Scaled P(Fake)]
+</div>
+
+<h2>5. Empirical Performance Benchmark</h2>
+<p>Evaluation metrics obtained on the held-out validation sets across all operational branches:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Model / Branch</th>
+      <th>Evaluated Features</th>
+      <th>ROC-AUC</th>
+      <th>Accuracy</th>
+      <th>F1-Score</th>
+      <th>Precision</th>
+      <th>Recall</th>
+      <th>EER</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Spatial Branch</strong></td>
+      <td>RGB Facial Keyframes (224&times;224)</td>
+      <td class="text-center highlight">0.9676</td>
+      <td class="text-center">92.95%</td>
+      <td class="text-center">0.9567</td>
+      <td class="text-center">0.9621</td>
+      <td class="text-center">0.9512</td>
+      <td class="text-center">8.94%</td>
+    </tr>
+    <tr>
+      <td><strong>Frequency Branch</strong></td>
+      <td>FFT + DWT LL + Energy (3&times;224&times;224)</td>
+      <td class="text-center highlight">0.9703</td>
+      <td class="text-center highlight">95.10%</td>
+      <td class="text-center highlight">0.9722</td>
+      <td class="text-center">0.9703</td>
+      <td class="text-center">0.9741</td>
+      <td class="text-center">9.50%</td>
+    </tr>
+    <tr>
+      <td><strong>Audio Branch</strong></td>
+      <td>MFCC + Mel-Spectrogram (168&times;300)</td>
+      <td class="text-center highlight">1.0000</td>
+      <td class="text-center highlight">100.0%</td>
+      <td class="text-center highlight">1.0000</td>
+      <td class="text-center">1.0000</td>
+      <td class="text-center">1.0000</td>
+      <td class="text-center">0.00%</td>
+    </tr>
+    <tr style="background-color: #eaeff5; font-weight: bold;">
+      <td><strong>Cross-Attention Fusion</strong></td>
+      <td>Tri-Modal Joint Reasoning</td>
+      <td class="text-center highlight">0.9568</td>
+      <td class="text-center">94.19%</td>
+      <td class="text-center">0.9669</td>
+      <td class="text-center">0.9674</td>
+      <td class="text-center">0.9664</td>
+      <td class="text-center">11.16%</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<h2>6. Two-Stage Training Protocol</h2>
+<ul>
+  <li><strong>Stage 1 (Frozen Backbone Warmup &mdash; Epochs 1 to 10):</strong> Unimodal backbones remain frozen. Only projection layers, Transformer Encoder, attention pooling, and classification heads are trained (&eta; = 1.0 &times; 10<sup>-3</sup>, AdamW, weight decay 1.0 &times; 10<sup>-4</sup>).</li>
+  <li><strong>Stage 2 (End-to-End Fine-Tuning &mdash; Epochs 11 to 30):</strong> All backbones are unfrozen and trained end-to-end (&eta; = 1.0 &times; 10<sup>-5</sup>, Cosine Annealing scheduler, gradient clipping 1.0).</li>
+  <li><strong>Modality Dropout:</strong> <i>p = 0.10</i> during training to ensure the network does not become overly reliant on any single modality.</li>
+</ul>
+
+<h2>7. Explainability & Production Deployment</h2>
+<ul>
+  <li><strong>Modality Evidence Attribution:</strong> The model outputs dynamic softmax weights <i>[&alpha;<sub>sp</sub>, &alpha;<sub>freq</sub>, &alpha;<sub>au</sub>]</i>. For lip-sync or audio tampering, acoustic weight dominates (<i>&alpha;<sub>au</sub> &gt; 0.70</i>), providing transparent forensic explanation.</li>
+  <li><strong>Spatial Grad-CAM:</strong> Activation heatmaps on ResNeXt-50 highlight facial boundaries, mouth blending contours, and artifact locations.</li>
+  <li><strong>Inference Engine & Web Dashboard:</strong> Standalone Python API (<code>predictor.py</code>) and interactive Flask dashboard (<code>app.py</code>) enabling real-time video upload and evaluation.</li>
+</ul>
+
+<h2>8. Downstream Prompt to Generate Final Paper</h2>
+<p>To generate the full IEEE/ACM camera-ready paper, pass this dossier along with the prompt below to any high-capability LLM:</p>
+
+<div class="prompt-box">
+You are an expert AI researcher and academic author specializing in Computer Vision, Deep Learning, and Media Forensics.
+
+I have provided you with a comprehensive Master Dossier containing all architectural designs, mathematical formulations, training schedules, datasets, benchmarks, and ablation metrics for my research project on Multimodal Deepfake Detection.
+
+TASK:
+Write a complete, highly rigorous, publication-grade research paper formatted according to standard IEEE/ACM conference guidelines. 
+
+INSTRUCTIONS & GUIDELINES:
+1. STRUCTURE: Write the full paper including:
+   - Title: Tri-Modal Cross-Attention Fusion: Harmonizing Spatial, Spectral, and Acoustic Representations for Robust Deepfake Detection
+   - Abstract (refined, high impact, highlighting metrics)
+   - Section I: Introduction (background, motivation, key challenges in unimodal deepfake detection, our core contributions)
+   - Section II: Related Work (Spatial Artifact Detection, Frequency-Domain Forensics, Audio Deepfake Detection, and Multimodal Fusion Approaches)
+   - Section III: Proposed Methodology (mathematical formulations of FFT/DWT generation, 1D-CNN+BiLSTM audio modeling, ResNeXt spatial encoding, Swin-Transformer frequency encoding, Cross-Attention Transformer fusion, and Platt calibration)
+   - Section IV: Experimental Setup (dataset descriptions: Celeb-DF v2, FF++ C23, FakeAVCeleb v1.2; preprocessing; training parameters and two-stage schedule)
+   - Section V: Experimental Results & Analysis (complete quantitative comparative tables using the exact metrics from the dossier, unimodal vs multimodal analysis, modality masking efficacy)
+   - Section VI: Explainability & Interpretability (Attention distribution analysis and Grad-CAM artifact localization)
+   - Section VII: Discussion & Limitations (compression degradation, cross-generator generalization, computational complexity)
+   - Section VIII: Conclusion & Future Work
+2. ACCURACY: Strictly preserve all exact numbers, percentages, dimensions, and model names provided in the dossier (35,089 videos, ResNeXt-50 32x4d, Swin-T, 96.76% spatial AUC, 97.03% frequency AUC, 100.0% audio AUC, 95.68% fusion AUC, db4 wavelets, etc.).
+3. MATHEMATICAL RIGOR: Use standard LaTeX equation notation ($...$ and $$...$$).
+4. TONE: Objective, academically formal, precise, and authoritative.
+</div>
+
+</body>
+</html>
